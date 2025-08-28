@@ -1,3 +1,9 @@
+<?php
+session_start();
+if (isset($_SESSION['user'])) {
+    header('Location: ../../../index.php');
+}
+?>
 <!DOCTYPE html>
 <html>
 
@@ -41,6 +47,31 @@
             </div>
         </form>
     </div>
+
+    <!-- Login Ajax Request link -->
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script>
+    // Login Ajax Request 
+    $(document).ready(function() {
+        $("#register-btn").click(function(e) {
+            if ($("#register-form")[0].checkValidity()) {
+                e.preventDefault();
+                $.ajax({
+                    url: '../../php/action.php',
+                    method: 'post',
+                    data: $("#register-form").serialize() + '&action=sign-up',
+                    success: function(response) {
+                        if (response === 'register') {
+                            window.location = '../../../index.php';
+                        } else {
+                            $("#logAlert").html(response);
+                        }
+                    }
+                });
+            }
+        });
+    });
+    </script>
 </body>
 
 </html>

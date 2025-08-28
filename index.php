@@ -1,4 +1,22 @@
 <?php
+include_once 'resource/config/app.php';
+session_start(); 
+
+$isLoggedIn = isset($_SESSION['user']);
+
+try {
+    $conn = new PDO("sqlite:resource/config/database/imago_authentication.db"); 
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+    die("Koneksi gagal: " . $e->getMessage());
+}
+
+$users = [];
+if ($isLoggedIn) {
+    $stmt = $conn->prepare("SELECT username, email, created_at FROM users WHERE username = :username LIMIT 1");
+    $stmt->execute([':username' => $_SESSION['user']]);
+    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,7 +55,7 @@
     }
 
     .navbar a.btn {
-        background: #5fd3d0;
+        background: #ff9800;
         color: #fff;
         padding: 6px 14px;
         border-radius: 6px;
@@ -46,7 +64,7 @@
     }
 
     .navbar a.btn:hover {
-        background: #419290ff;
+        background: #e68900;
     }
 
     .home {
@@ -82,15 +100,35 @@
 
 <body>
     <header>
+        <a href="#" class="logo">
+            <img src="resource/assets/logo.png" alt="Logo Tosepatu" />
+        </a>
         <nav class="navbar">
+            <?php if (!$isLoggedIn): ?>
             <a href="resource/view/auth/sign-in.php" class="btn">Masuk</a>
+            <?php else: ?>
+            <span>Halo, <?= htmlspecialchars($_SESSION['user']) ?></span>
+            <a href="resource/php/logout.php" class="btn">Logout</a>
+            <?php endif; ?>
         </nav>
     </header>
 
     <section class="home" id="home">
         <div class="content">
             <h3>Profil User</h3>
-
+            <?php if ($isLoggedIn && $users): ?>
+            <div class="user-list">
+                <?php foreach ($users as $u): ?>
+                <div class="user-card">
+                    <h4><?= htmlspecialchars($u['username']) ?></h4>
+                    <p>Email: <?= htmlspecialchars($u['email']) ?></p>
+                    <p>Dibuat: <?= htmlspecialchars($u['created_at']) ?></p>
+                </div>
+                <?php endforeach; ?>
+            </div>
+            <?php else: ?>
+            <p>Silakan login untuk melihat profil Anda.</p>
+            <?php endif; ?>
         </div>
     </section>
 </body>
