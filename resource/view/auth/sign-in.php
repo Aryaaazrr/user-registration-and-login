@@ -1,3 +1,9 @@
+<?php
+session_start();
+if (isset($_SESSION['user'])) {
+    header('Location: ../../../index.php');
+}
+?>
 <!DOCTYPE html>
 <html>
 
@@ -37,6 +43,31 @@
             </div>
         </form>
     </div>
+
+    <!-- Login Ajax Request link -->
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script>
+    // Login Ajax Request 
+    $(document).ready(function() {
+        $("#login-btn").click(function(e) {
+            if ($("#login-form")[0].checkValidity()) {
+                e.preventDefault();
+                $.ajax({
+                    url: '../../php/action.php',
+                    method: 'post',
+                    data: $("#login-form").serialize() + '&action=sign-in',
+                    success: function(response) {
+                        if (response === 'loginUser') {
+                            window.location = '../../../index.php';
+                        } else {
+                            $("#logAlert").html(response);
+                        }
+                    }
+                });
+            }
+        });
+    });
+    </script>
 </body>
 
 </html>

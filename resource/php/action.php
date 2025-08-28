@@ -4,6 +4,34 @@ session_start();
 require_once 'auth.php';
 $user = new Auth();
 
+if (isset($_POST['action']) && $_POST['action'] == 'sign-in') {
+    $email = $user->validate($_POST['email']);
+    $pass = $user->validate($_POST['password']);
+
+    if (empty($email) && empty($pass)) {
+        echo $user->showMessage('danger', 'Email and Password is required');
+        exit();
+    } else if (empty($email)) {
+        echo $user->showMessage('danger', 'Email is required');
+        exit();
+    } else if (empty($pass)) {
+        echo $user->showMessage('danger', 'Password is required');
+        exit();
+    } else {
+        $loginUser1 = $user->signIn($email);
+        if ($loginUser1 != null) {
+            if (password_verify($pass, $loginUser1['password'])) {
+                echo 'loginUser';
+                $_SESSION['user'] = $email;
+            } else {
+                echo $user->showMessage('danger', 'Wrong password');
+            }
+        } else {
+            echo $user->showMessage('danger', 'Account not found. Please sign up first.');
+        }
+    }
+}
+
 if (isset($_POST['action']) && $_POST['action'] == 'sign-up') {
     $name = $user->validate($_POST['username']);
     $email = $user->validate($_POST['email']);
