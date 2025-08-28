@@ -47,8 +47,8 @@ imago/
 1. Clone repository atau download source code:
 
    ```bash
-   git clone https://github.com/username/imago-authentication.git
-   cd imago-authentication
+   git clone https://github.com/username/user-registration-and-login.git
+   cd user-registration-and-login
    ```
 
 2. Pastikan sudah ada **PHP** (versi 7.4+) dan **SQLite** aktif di sistem Anda.
