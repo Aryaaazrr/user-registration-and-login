@@ -13,8 +13,8 @@ try {
 
 $users = [];
 if ($isLoggedIn) {
-    $stmt = $conn->prepare("SELECT username, email, created_at FROM users WHERE username = :username LIMIT 1");
-    $stmt->execute([':username' => $_SESSION['user']]);
+    $stmt = $conn->prepare("SELECT username, email, created_at FROM users WHERE email = :email LIMIT 1");
+    $stmt->execute([':email' => $_SESSION['user']]);
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
