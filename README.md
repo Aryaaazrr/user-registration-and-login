@@ -47,7 +47,7 @@ imago/
 1. Clone repository atau download source code:
 
    ```bash
-   git clone https://github.com/username/user-registration-and-login.git
+   git clone https://github.com/Aryaaazrr/user-registration-and-login.git
    cd user-registration-and-login
    ```
 
